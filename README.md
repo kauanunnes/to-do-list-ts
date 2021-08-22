@@ -5,7 +5,7 @@ O array de itens é mantido como string no local storage do browser.
 
 ## Para fazer rodar em sua máquina
  Clone o projeto
-` git clone https://github.com/sergiomoura/todolist.git`
+` git clone https://github.com/kauanunnes/to-do-list-ts`
 
 Entre na pasta do projeto
 `cd todolist`
