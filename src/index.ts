@@ -236,7 +236,7 @@ function handleCheck() {
 }
 
 function handleSuccess(message: string, bgColor: string) {
-  let errorsContainer = document.createElement("div");
+  let errorsContainer = <HTMLDivElement>document.createElement("div");
   errorsContainer.className = "errors";
   document.querySelector("body").appendChild(errorsContainer);
   errorsContainer.setAttribute("class", "errors activated");
@@ -245,7 +245,7 @@ function handleSuccess(message: string, bgColor: string) {
   snackError.setAttribute("class", "snack-container");
   snackError.style.background = bgColor;
 
-  let errorLabel = document.createElement("span");
+  let errorLabel = <HTMLSpanElement>document.createElement("span");
   errorLabel.setAttribute("class", "error");
   errorLabel.innerHTML = message;
 
