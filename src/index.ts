@@ -3,22 +3,11 @@ import "./style.css";
 import "material-icons/iconfont/material-icons.css";
 import { Tarefa, Prioridade } from "./model/Tarefa";
 
-let tarefasAtuais: Tarefa[] = [
-  {
-    id: 0,
-    descricao: "Lavar roupa",
-    dataCriada: new Date(),
-    finalizada: false,
-    prioridade: Prioridade.media,
-  },
-  {
-    id: 1,
-    descricao: "Beber Café",
-    dataCriada: new Date(),
-    finalizada: false,
-    prioridade: Prioridade.baixa,
-  },
-];
+let t1 = new Tarefa('Passar na padaria', Prioridade.baixa);
+let t2 = new Tarefa('Pagar escola das crionças', Prioridade.alta);
+
+
+let tarefasAtuais: Tarefa[] = [t1, t2]
 
 window.addEventListener("load", () => {
   showTasks(tarefasAtuais);
@@ -34,6 +23,7 @@ window.addEventListener("load", () => {
 
     let permissionToContinue: boolean = true;
     let taskDescription: string;
+
     if (inputElement.value.split("")[0] !== "#") {
       taskDescription = inputElement.value;
     } else {
@@ -48,6 +38,7 @@ window.addEventListener("load", () => {
     });
 
     if (!permissionToContinue) return;
+
     let priority: Prioridade;
 
     switch (inputElement.value.split("")[1]) {
@@ -66,14 +57,7 @@ window.addEventListener("load", () => {
         break;
     }
 
-    let task: Tarefa = {
-      id: tarefasAtuais.length,
-      descricao: taskDescription,
-      dataCriada: new Date(),
-      finalizada: false,
-    };
-
-    task.prioridade = priority;
+    let task = new Tarefa(taskDescription, priority)
 
     handleNewTask(task);
     handleCheck();
@@ -83,33 +67,17 @@ window.addEventListener("load", () => {
   });
 });
 
-function handleNewTask(task: Tarefa) {
+function handleNewTask(task: Tarefa):void {
   tarefasAtuais.push(task);
-  let table = <HTMLTableElement>document.querySelector("main table#table");
-  let checkbox = <HTMLInputElement>document.createElement("input");
-  checkbox.type = "checkbox";
-  let newRow = <HTMLTableRowElement>document.createElement("tr");
-  let newCell = <HTMLTableCellElement>document.createElement("td");
-  let newCellPriority = <HTMLTableCellElement>document.createElement("td");
-  let newCellTask = newCell.cloneNode();
-  let newCellIcon = newCell.cloneNode();
-  let deleteIcon = <HTMLLIElement>document.createElement("i");
-  deleteIcon.className = "material-icons";
-
-  deleteIcon.textContent = "delete";
-  newCell.appendChild(checkbox);
-  newCellTask.textContent = task.descricao;
-  newCellIcon.appendChild(deleteIcon);
-
+  let table: HTMLTableElement = <HTMLTableElement>(
+    document.querySelector("main table#table")
+  );
+  let newRow = task.toRow()
   switch (task.prioridade) {
     case 1:
-      newCellPriority.textContent = "[alta]";
-      newRow.append(newCell, newCellTask, newCellPriority, newCellIcon);
       table.insertBefore(newRow, table.querySelector("table#table tr"));
       break;
     case 2:
-      newCellPriority.textContent = "[média]";
-      newRow.append(newCell, newCellTask, newCellPriority, newCellIcon);
       table.querySelectorAll("table#table tr").forEach((value) => {
         if (value.querySelectorAll("td")[2].textContent === "[baixa]") {
           table.insertBefore(newRow, value);
@@ -119,10 +87,7 @@ function handleNewTask(task: Tarefa) {
       });
       break;
     case 3:
-      newCellPriority.textContent = "[baixa]";
-      newRow.append(newCell, newCellTask, newCellPriority, newCellIcon);
       table.appendChild(newRow);
-
       break;
     default:
       break;
