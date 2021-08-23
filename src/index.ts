@@ -48,8 +48,23 @@ window.addEventListener("load", () => {
     });
 
     if (!permissionToContinue) return;
+    let priority: Prioridade;
 
-    let priority: number = parseInt(inputElement.value.split("")[1]) || 3;
+    switch (inputElement.value.split("")[1]) {
+      case "1":
+        priority = Prioridade.alta;
+        break;
+      case "2":
+        priority = Prioridade.media;
+        break;
+      case "3":
+        priority = Prioridade.baixa;
+        break;
+      default:
+        priority = Prioridade.baixa;
+
+        break;
+    }
 
     let task: Tarefa = {
       id: tarefasAtuais.length,
@@ -259,6 +274,7 @@ function handleSuccess(message: string, bgColor: string) {
     errorsContainer.setAttribute("class", "errors");
     errorsContainer.querySelectorAll(".snack-container").forEach((value) => {
       errorsContainer.removeChild(value);
+      errorsContainer.remove();
     });
   }, 3500);
 }
