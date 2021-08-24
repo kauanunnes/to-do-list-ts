@@ -1,62 +1,37 @@
 export class Tarefa {
   descricao: string;
   finalizada: boolean;
-  prioridade: Prioridade;
+  prioridade?: Prioridade;
 
   constructor(descricao: string, prioridade: Prioridade) {
     this.descricao = descricao;
-    this.prioridade = prioridade;
+    this.prioridade = prioridade || Prioridade.baixa;
     this.finalizada = false;
   }
 
   toRow(): HTMLTableRowElement {
-    let checkbox: HTMLInputElement = <HTMLInputElement>(
-      document.createElement("input")
-    );
-    checkbox.type = "checkbox";
+    let tr = document.createElement("tr");
+    tr.className = this.finalizada ? "done" : "";
+    tr.innerHTML = `
+      <td>
+        <input type="checkbox">
+      </td>
+      <td>
+        ${this.descricao}
+      </td>
+      <td>
+        <i class="material-icons">delete</i>
+      </td>
 
-    let newRow: HTMLTableRowElement = <HTMLTableRowElement>(
-      document.createElement("tr")
-    );
-    let deleteIcon: HTMLElement = <HTMLElement>document.createElement("i");
-    deleteIcon.className = "material-icons";
-    deleteIcon.textContent = "delete";
+    
+    `;
+    tr.querySelector("input").addEventListener("click", (e) => {
+      const input: HTMLInputElement = <HTMLInputElement>e.target;
+      this.finalizada = input.checked
+      input.checked ? (tr.className = "done") : (tr.className = "");
+    });
 
-    let newCell: HTMLTableCellElement = <HTMLTableCellElement>(
-      document.createElement("td")
-    );
-
-    let newCellPriority: HTMLTableCellElement = <HTMLTableCellElement>(
-      document.createElement("td")
-    );
-
-    let newCellTask = newCell.cloneNode();
-
-    let newCellIcon = newCell.cloneNode();
-
-    newCell.appendChild(checkbox);
-
-    newCellTask.textContent = this.descricao;
-
-    newCellIcon.appendChild(deleteIcon);
-    switch (this.prioridade) {
-      case 1:
-        newCellPriority.textContent = "[alta]";
-        break;
-      case 2:
-        newCellPriority.textContent = "[média]";
-
-        break;
-      case 3:
-        newCellPriority.textContent = "[baixa]";
-
-        break;
-      default:
-        break;
-    }
-    newRow.append(newCell, newCellTask, newCellPriority, newCellIcon);
-
-    return newRow;
+    return tr;
   }
 }
 

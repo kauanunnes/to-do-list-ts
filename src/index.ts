@@ -2,14 +2,12 @@
 import "./style.css";
 import "material-icons/iconfont/material-icons.css";
 import { Tarefa, Prioridade } from "./model/Tarefa";
+import { ListaDeTarefas } from "./model/ListaDeTarefas";
 
-let t1 = new Tarefa('Passar na padaria', Prioridade.baixa);
-let t2 = new Tarefa('Pagar escola das crionças', Prioridade.alta);
+let lista = new ListaDeTarefas(document.querySelector('main'))
 
 
-let tarefasAtuais: Tarefa[] = [t1, t2]
-
-window.addEventListener("load", () => {
+/*window.addEventListener("load", () => {
   showTasks(tarefasAtuais);
   handleCheck();
 
@@ -57,7 +55,7 @@ window.addEventListener("load", () => {
         break;
     }
 
-    let task = new Tarefa(taskDescription, priority)
+    let task = new Tarefa(taskDescription, priority);
 
     handleNewTask(task);
     handleCheck();
@@ -67,23 +65,23 @@ window.addEventListener("load", () => {
   });
 });
 
-function handleNewTask(task: Tarefa):void {
+function handleNewTask(task: Tarefa): void {
   tarefasAtuais.push(task);
   let table: HTMLTableElement = <HTMLTableElement>(
     document.querySelector("main table#table")
   );
-  let newRow = task.toRow()
+  let newRow = task.toRow();
   switch (task.prioridade) {
     case 1:
       table.insertBefore(newRow, table.querySelector("table#table tr"));
       break;
     case 2:
+      let permission:boolean = true
       table.querySelectorAll("table#table tr").forEach((value) => {
-        if (value.querySelectorAll("td")[2].textContent === "[baixa]") {
+        if (value.querySelectorAll("td")[2].textContent === "[baixa]" && permission) {
+          permission = false
           table.insertBefore(newRow, value);
-          return false;
-        }
-        table.appendChild(newRow);
+        } 
       });
       break;
     case 3:
@@ -112,9 +110,9 @@ function handleNewTask(task: Tarefa):void {
   });
 }
 
-/* @arr array you want to listen to
+@arr array you want to listen to
    @callback function that will be called on any change inside array
- */
+
 function listenChangesinArray(arr: Tarefa[], callback: Function) {
   // Add more methods here if you want to listen to them
   ["push"].forEach((m) => {
@@ -146,28 +144,38 @@ function showTasks(tarefas: Tarefa[]) {
 
     deleteIcon.textContent = "delete";
     newCell.appendChild(checkbox);
-
-    switch (task.prioridade) {
-      case 1:
-        newCellPriority.textContent = "[alta]";
-        break;
-      case 2:
-        newCellPriority.textContent = "[média]";
-        break;
-      case 3:
-        newCellPriority.textContent = "[baixa]";
-        break;
-      default:
-        break;
-    }
-
-    // newRow.insertCell().textContent = tarefasAtuais[tarefasAtuais.length - 1].prioridade;
     newCellTask.textContent = task.descricao;
 
     newCellIcon.appendChild(deleteIcon);
 
     newRow.append(newCell, newCellTask, newCellPriority, newCellIcon);
-    table.appendChild(newRow);
+    switch (task.prioridade) {
+      case 1:
+        newCellPriority.textContent = "[alta]";
+        table.insertBefore(newRow, table.querySelector("table#table tr"));
+
+        break;
+      case 2:
+        newCellPriority.textContent = "[média]";
+        table.querySelectorAll("table#table tr").forEach((value) => {
+          if (value.querySelectorAll("td")[2].textContent === "[baixa]") {
+            table.insertBefore(newRow, value);
+            return false;
+          }
+          table.appendChild(newRow);
+        });
+
+        break;
+      case 3:
+        newCellPriority.textContent = "[baixa]";
+        table.appendChild(newRow);
+
+        break;
+      default:
+        break;
+    }
+
+    // table.appendChild(newRow);
     document.querySelectorAll("i").forEach((item) => {
       item.addEventListener("click", (event) => {
         const btnDelete = event.currentTarget;
@@ -214,7 +222,7 @@ function handleCheck() {
       });
     });
 }
-
+*/
 function handleSuccess(message: string, bgColor: string) {
   let errorsContainer = <HTMLDivElement>document.createElement("div");
   errorsContainer.className = "errors";
