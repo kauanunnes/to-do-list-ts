@@ -13,8 +13,7 @@ export class ListaDeTarefas {
     this.form = <HTMLFormElement>main.querySelector("#form");
     this.tabela = <HTMLTableElement>main.querySelector("table");
     this.tarefas = [];
-    // console.log(JSON.parse(localStorage.getItem('listaDeTarefas')));
-
+    
     this.form.addEventListener("submit", (e) => {
       e.preventDefault();
       this.adicionarTarefa();
@@ -22,10 +21,16 @@ export class ListaDeTarefas {
   }
 
   removerTarefa(task: Tarefa) {
+    console.log(task)
+    let tarefasStoraged: Tarefa[] = JSON.parse(
+      localStorage.getItem("listaDeTarefas")
+    );
+    this.tarefas = tarefasStoraged
     this.tarefas.splice(this.tarefas.indexOf(task), 1);
-
+    
     localStorage.setItem("listaDeTarefas", JSON.stringify(this.tarefas));
-
+    
+    console.log(this.tarefas)
     handleModal("Tarefa removida com sucesso!", "#00cc44");
   }
 
@@ -89,9 +94,6 @@ export class ListaDeTarefas {
           this.removerTarefa(value);
         });
 
-      console.log(value);
     });
-    for (let tarefa of tarefasStoraged) {
-    }
   }
 }
