@@ -13,7 +13,7 @@ export class ListaDeTarefas {
     this.form = <HTMLFormElement>main.querySelector("#form");
     this.tabela = <HTMLTableElement>main.querySelector("table");
     this.tarefas = [];
-    
+
     this.form.addEventListener("submit", (e) => {
       e.preventDefault();
       this.adicionarTarefa();
@@ -21,16 +21,20 @@ export class ListaDeTarefas {
   }
 
   removerTarefa(task: Tarefa) {
-    console.log(task)
     let tarefasStoraged: Tarefa[] = JSON.parse(
       localStorage.getItem("listaDeTarefas")
     );
-    this.tarefas = tarefasStoraged
-    this.tarefas.splice(this.tarefas.indexOf(task), 1);
-    
+
+    this.tarefas = tarefasStoraged;
+    console.log(task);
+    this.tarefas.forEach((value, index) => {
+      if (value.id == task.id) {
+        this.tarefas.splice(index, 1);
+      }
+    });
+
     localStorage.setItem("listaDeTarefas", JSON.stringify(this.tarefas));
-    
-    console.log(this.tarefas)
+
     handleModal("Tarefa removida com sucesso!", "#00cc44");
   }
 
@@ -62,38 +66,29 @@ export class ListaDeTarefas {
     let tarefasStoraged: Tarefa[] = JSON.parse(
       localStorage.getItem("listaDeTarefas")
     );
-    tarefasStoraged.forEach((value, index) => {
-      let tr = document.createElement("tr");
-      tr.id = value.id;
-      tr.className = value.finalizada ? "done" : "";
-      tr.innerHTML = `
-        <td>
-          <input type="checkbox">
-        </td>
-        <td>
-          ${value.descricao}
-        </td>
-        <td>
-          <i class="material-icons">delete</i>
-        </td>
-  
-      
-      `;
+    this.tarefas = tarefasStoraged;
+    tarefasStoraged.forEach((value) => {
+      let task = new Tarefa(value.descricao, value.prioridade, value.id);
+      let tr = task.toRow()
       this.tabela.appendChild(tr);
-      if (value.finalizada) tr.querySelector("input").checked = true;
-      tr.querySelector("input").addEventListener("click", (e) => {
-        const input: HTMLInputElement = <HTMLInputElement>e.target;
+
+      const input: HTMLInputElement = <HTMLInputElement>tr.querySelector("input");
+      if (value.finalizada) {
+        tr.className = 'done'
+        input.checked = true
+      }
+
+      input.addEventListener("click", (e) => {
         value.finalizada = input.checked;
         input.checked ? (tr.className = "done") : (tr.className = "");
         localStorage.setItem("listaDeTarefas", JSON.stringify(tarefasStoraged));
       });
       this.tabela
-        .querySelector(`#${tr.id} td i`)
+        .querySelector(`#${value.id} td i`)
         .addEventListener("click", () => {
-          this.tabela.querySelector(`#${tr.id}`).remove();
-          this.removerTarefa(value);
+          this.tabela.querySelector(`#${task.id}`).remove();
+          this.removerTarefa(task);
         });
-
     });
   }
 }
