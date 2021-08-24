@@ -1,5 +1,6 @@
 import { Prioridade, Tarefa } from "./Tarefa";
 import uniqid from "../../node_modules/uniqid/index.js";
+import handleModal from "../packages/modal";
 
 export class ListaDeTarefas {
   tarefas: Tarefa[];
@@ -24,10 +25,16 @@ export class ListaDeTarefas {
     this.tarefas.splice(this.tarefas.indexOf(task), 1);
 
     localStorage.setItem("listaDeTarefas", JSON.stringify(this.tarefas));
+
+    handleModal("Tarefa removida com sucesso!", "#00cc44");
   }
 
   adicionarTarefa() {
-    if (!this.input.value) return;
+    if (!this.input.value) {
+      handleModal("Campo vazio.", "#ff4d4d");
+
+      return;
+    }
 
     let task = new Tarefa(this.input.value, Prioridade.baixa, uniqid());
 
@@ -42,6 +49,7 @@ export class ListaDeTarefas {
     this.mostrarTarefas();
 
     this.input.value = "";
+    handleModal("Tarefa adicionada com sucesso!", "#00cc44");
   }
 
   mostrarTarefas(): void {
@@ -67,12 +75,12 @@ export class ListaDeTarefas {
       
       `;
       this.tabela.appendChild(tr);
-      if (value.finalizada) tr.querySelector('input').checked = true
+      if (value.finalizada) tr.querySelector("input").checked = true;
       tr.querySelector("input").addEventListener("click", (e) => {
         const input: HTMLInputElement = <HTMLInputElement>e.target;
         value.finalizada = input.checked;
         input.checked ? (tr.className = "done") : (tr.className = "");
-        localStorage.setItem('listaDeTarefas', JSON.stringify(tarefasStoraged))  
+        localStorage.setItem("listaDeTarefas", JSON.stringify(tarefasStoraged));
       });
       this.tabela
         .querySelector(`#${tr.id} td i`)
@@ -82,8 +90,7 @@ export class ListaDeTarefas {
         });
 
       console.log(value);
-
-    })
+    });
     for (let tarefa of tarefasStoraged) {
     }
   }
