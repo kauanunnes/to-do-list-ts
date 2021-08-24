@@ -1,11 +1,13 @@
 // Importando estilos
 import "./style.css";
 import "material-icons/iconfont/material-icons.css";
-import { Tarefa, Prioridade } from "./model/Tarefa";
 import { ListaDeTarefas } from "./model/ListaDeTarefas";
 
-let lista = new ListaDeTarefas(document.querySelector('main'))
+let lista:ListaDeTarefas = new ListaDeTarefas(document.querySelector('main'))
 
+!localStorage.getItem('listaDeTarefas') &&   localStorage.setItem('listaDeTarefas', JSON.stringify(lista.tarefas))
+
+lista.mostrarTarefas()
 
 /*window.addEventListener("load", () => {
   showTasks(tarefasAtuais);
