@@ -26,7 +26,6 @@ export class ListaDeTarefas {
     );
 
     this.tarefas = tarefasStoraged;
-    console.log(task);
     this.tarefas.forEach((value, index) => {
       if (value.id == task.id) {
         this.tarefas.splice(index, 1);
