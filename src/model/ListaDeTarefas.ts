@@ -1,5 +1,5 @@
 import { Prioridade, Tarefa } from "./Tarefa";
-import uniqid from "../../node_modules/uniqid/index.js";
+import * as uniqid from "uniqid";
 import handleModal from "../packages/modal";
 
 export class ListaDeTarefas {
